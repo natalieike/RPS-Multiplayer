@@ -41,3 +41,7 @@ body{
 .resultsText{
 	font-size: 24px;
 }
+
+.gameBtn{
+	margin: 10px;
+}

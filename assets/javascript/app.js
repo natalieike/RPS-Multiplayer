@@ -27,23 +27,6 @@ $(document).ready(function(){
 	var username; //stores username
 	var user = "user3"; //stores whether user 1 or user 2
 
-	//Resets gameplay values in Database
-	var resetGameplay = function(){
-		database.ref("Game").set({
-			user1: {
-				userChat: "NotInitiated",
-				userInput: 3,
-				userName: "EnterName"
-			},
-			user2: {
-				userChat: "NotInitiated",
-				userInput: 3,
-				userName: "EnterName"
-			}
-		});
-		fromDatabaseArray = [{}, {}];
-	};
-
 	//Sends the user data to Firebase, determines if user1 or user2
 	var sendUserToDb = function(name){
 		if(user == "user3"){
@@ -139,7 +122,7 @@ $(document).ready(function(){
 			default:
 				winnerDiv.text("Waiting for Other User...");
 		}
-		winnerDiv.addClass("resultsText");
+		winnerDiv.addClass("resultsText text-center");
 		$("#results").append(winnerDiv);
 	};
 
@@ -178,14 +161,48 @@ $(document).ready(function(){
 		}
 	};
 
+	//End sequence - prompts user with buttons to play again or leave
 	var endGame = function(){
 		var resetBtn = $("<button>");
 		var leaveBtn = $("<button>");
-		resetBtn.addClass("btn btn-info");
+		var btnDiv = $("<div>");
+		resetBtn.addClass("btn btn-info gameBtn");
 		resetBtn.attr("id", "resetGame");
-		leaveBtn.addClass("btn btn-danger");
+		resetBtn.text("Play Again");
+		leaveBtn.addClass("btn btn-danger gameBtn");
 		leaveBtn.attr("id", "leaveGame");
+		leaveBtn.text("Leave Game");
+		$("#btnDiv").append(resetBtn);
+		$("#btnDiv").append(leaveBtn);
 	}
+
+	//Resets all user info when user leaves so new player can join
+	var resetUserInfo = function(){
+		if(user == "user1"){
+			database.ref("Game").update({
+				user1Name: "EnterName",
+				user1Input: "3",
+				user2Input: "3",
+				user1Chat: "NotInitiated"
+			});
+		}
+		else if(user == "user2"){
+			database.ref("Game").update({
+				user2Name: "EnterName",
+				user1Input: "3",
+				user2Input: "3",
+				user2Chat: "NotInitiated"
+			});			
+		}
+	};
+
+	//Resets just the game inputs so the same user can play again.  Retains chat and username.
+	var resetGameInfo = function(){
+		database.ref("Game").update({
+			user1Input: "3",
+			user2Input: "3"
+		})
+	};
 
 	//Hides Weapon Choice and Stats until Username is entered
 	$(".panel").hide();
@@ -198,7 +215,6 @@ $(document).ready(function(){
 		sendUserToDb(username);
 		$("#showUserName").text("Hello, " + username);
 	});
-
 
 	//Value handler for user1 name
 	database.ref("Game/user1Name").on("value", function(snapshot){
@@ -250,28 +266,31 @@ $(document).ready(function(){
 			console.log(errorObject);
 	});
 
-
-/*
-	//Value handler for user data
-	database.ref("Game").on("value", function(snapshot){
-		var user1Name = snapshot.val().user1.userName;
-		var user2Name = snapshot.val().user2.userName;
-		var user1Input = snapshot.val().user1.userInput;
-		var user2Input = snapshot.val().user2.userInput;
-		var user1Chat = snapshot.val().user1.userChat;
-		var user2Chat = snapshot.val().user2.userChat;
-		fromDatabaseArray = [
-			{userName: user1Name, 
-			 userInput: user1Input,
-			 userChat: user1Chat},
-			{userName: user2Name,
-			 userInput: user2Input,
-			 userChat: user2Chat}];
-		findWhatsChanged();
-	}, function(errorObject){
-		console.log(errorObject);
+	//Click handler for "Leave Game" button
+	$("body").on("click", "#leaveGame", function(){
+		console.log("click");
+		$("#showUserName").text("Goodbye, " + username + "!");
+		$(".panel").hide();
+		resetUserInfo();
 	});
-*/
+
+	//Click handler for "Play Again" button
+	$("body").on("click", "#resetGame", function(){
+		console.log("click");
+		resetGameInfo();
+		$("#results").empty();
+		$("#btnDiv").empty();
+		$("#weapon-choices").show();
+	});
+
+	//Resets user info if user closes window without leaving game properly
+	database.ref("Game").onDisconnect().update({
+		user1Name: "EnterName",
+		user1Input: "3",
+		user2Input: "3",
+		user1Chat: "NotInitiated"
+	});
+
 
 
 
