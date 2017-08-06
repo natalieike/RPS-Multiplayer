@@ -18,3 +18,13 @@ body{
 .stats{
 	font-size: 24px;
 }
+
+#errorMessage{
+	font-size: 40px;
+	color: white;
+}
+
+#showUserName{
+	font-size: 24px;
+	margin-top: 10px;
+}
