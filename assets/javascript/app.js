@@ -305,7 +305,7 @@ $(document).ready(function(){
 				$("#chat-title").text("Chatting with " + fromDatabaseArray[1].userName);
 			}
 			else{
-				$("#chat-title").text("Waiting for another user to join the game");
+				$("#chat-title").text("Waiting for another user to join");
 			}
 		}
 		else if(user == "user2"){
