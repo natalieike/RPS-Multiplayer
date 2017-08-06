@@ -310,7 +310,7 @@ $(document).ready(function(){
 		}
 		else if(user == "user2"){
 			database.ref("Game").update({
-				user2Chat: chatline
+				user2Chat: chatLine
 			});
 			if(fromDatabaseArray[0].userName != "EnterName"){
 				$("#chat-title").text("Chatting with " + fromDatabaseArray[0].userName);
