@@ -267,7 +267,8 @@ $(document).ready(function(){
 	});
 
 	//Click handler for "Leave Game" button
-	$("body").on("click", "#leaveGame", function(){
+	$("body").on("click", "#leaveGame", function(event){
+		event.preventDefault();
 		console.log("click");
 		$("#showUserName").text("Goodbye, " + username + "!");
 		$(".panel").hide();
@@ -275,7 +276,8 @@ $(document).ready(function(){
 	});
 
 	//Click handler for "Play Again" button
-	$("body").on("click", "#resetGame", function(){
+	$("body").on("click", "#resetGame", function(event){
+		event.preventDefault();
 		console.log("click");
 		resetGameInfo();
 		$("#results").empty();
@@ -291,7 +293,73 @@ $(document).ready(function(){
 		user1Chat: "NotInitiated"
 	});
 
+	//Click handler for chat button
+	$("#chatBtn").click(function(event){
+		event.preventDefault();
+		var chatLine = $("#chatInput").val();
+		if(user == "user1"){
+			database.ref("Game").update({
+				user1Chat: chatLine
+			});
+			if(fromDatabaseArray[1].userName != "EnterName"){
+				$("#chat-title").text("Chatting with " + fromDatabaseArray[1].userName);
+			}
+			else{
+				$("#chat-title").text("Waiting for another user to join the game");
+			}
+		}
+		else if(user == "user2"){
+			database.ref("Game").update({
+				user2Chat: chatline
+			});
+			if(fromDatabaseArray[0].userName != "EnterName"){
+				$("#chat-title").text("Chatting with " + fromDatabaseArray[0].userName);
+			}
+			else{
+				$("#chat-title").text("Waiting for another user to join the game");
+			}
+		}
+		$("#chatInput").val("");
+	});
 
+	//Value Handler for Chat - User 1
+	database.ref("Game/user1Chat").on("value", function(snapshot){
+		var newChatLine = snapshot.val();
+		var newDiv = $("<div>");
+		newDiv.text(newChatLine);
+		if(newChatLine == "NotInitiated"){
+			return;
+		}
+		if(user == "user1"){
+			newDiv.addClass("chatRight");
+		}
+		else{
+			newDiv.addClass("chatLeft");
+		}
+		$("#chat-window").prepend(newDiv);
+		$("#chat-window")[0].scrollIntoView(false);		
+	}, function(errorObject){
+			console.log(errorObject);
+	});
 
+	//Value Handler for Chat - User 2
+	database.ref("Game/user2Chat").on("value", function(snapshot){
+		var newChatLine = snapshot.val();
+		var newDiv = $("<div>");
+		newDiv.text(newChatLine);
+		if(newChatLine == "NotInitiated"){
+			return;
+		}
+		if(user == "user2"){
+			newDiv.addClass("chatRight chatItm");
+		}
+		else{
+			newDiv.addClass("chatLeft chatItm");
+		}
+		$("#chat-window").prepend(newDiv);
+		$("#chat-window")[0].scrollIntoView(false);
+	}, function(errorObject){
+			console.log(errorObject);
+	});
 
 });

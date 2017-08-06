@@ -45,3 +45,23 @@ body{
 .gameBtn{
 	margin: 10px;
 }
+
+.chat-panel{
+	height: 200px;
+}
+
+#chat-window{
+	height: 100px;
+	overflow: auto;
+	display: flex;
+	flex-direction: column-reverse;
+}
+
+
+.chatRight{
+	text-align: right;
+}
+
+.chatLeft{
+	text-align: left;
+}
