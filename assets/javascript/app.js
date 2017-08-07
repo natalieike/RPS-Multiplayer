@@ -168,7 +168,7 @@ $(document).ready(function(){
 	var endGame = function(){
 		var resetBtn = $("<button>");
 		var leaveBtn = $("<button>");
-		var btnDiv = $("<div>");
+		$("#btnDiv").clear();
 		resetBtn.addClass("btn btn-info gameBtn");
 		resetBtn.attr("id", "resetGame");
 		resetBtn.text("Play Again");
