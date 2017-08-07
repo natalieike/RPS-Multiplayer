@@ -46,7 +46,7 @@ $(document).ready(function(){
 		}
 	};
 
-	//Pushes the data to database
+	//Pushes the input data to database
 	var pushDataToDatabase = function(key){
 		if(user == "user1"){
 			database.ref("Game").update({user1Input: key});
@@ -74,7 +74,6 @@ $(document).ready(function(){
 			return;
 		}
 		choiceValue = fromDatabaseArray[index].userInput;
-		console.log("choiceValue: " + choiceValue);
 		switch(choiceValue){
 			case "0": 
 				imgTag.attr("src", "assets/images/rock_thumb.png");
@@ -204,6 +203,46 @@ $(document).ready(function(){
 		})
 	};
 
+	//Saves chat line to the database
+	var sendChatToDb = function(chatLine){
+		if(user == "user1"){
+			database.ref("Game").update({
+				user1Chat: chatLine
+			});
+		}
+		else if(user == "user2"){
+			database.ref("Game").update({
+				user2Chat: chatLine
+			});
+		}
+	};
+
+	//Displays chat line
+	var displayChatLine = function(newChatLine){
+		var index;
+		var newDiv = $("<div>");
+		if(newChatLine == "NotInitiated"){
+			return;
+		}
+		newDiv.text(newChatLine);
+		if (user == "user1"){
+			index = 1;
+			newDiv.addClass("chatRight");
+		}
+		else if(user == "user2"){
+			index = 0;
+			newDiv.addClass("chatLeft");
+		}
+		if(fromDatabaseArray[index].userName != "EnterName"){
+			$("#chat-title").text("Chatting with " + fromDatabaseArray[index].userName);
+		}
+		else{
+			$("#chat-title").text("Waiting for another user to join the game");
+		}
+		$("#chat-window").prepend(newDiv);
+		$("#chat-window")[0].scrollIntoView(false);		
+	};
+
 	//Hides Weapon Choice and Stats until Username is entered
 	$(".panel").hide();
 
@@ -269,7 +308,6 @@ $(document).ready(function(){
 	//Click handler for "Leave Game" button
 	$("body").on("click", "#leaveGame", function(event){
 		event.preventDefault();
-		console.log("click");
 		$("#showUserName").text("Goodbye, " + username + "!");
 		$(".panel").hide();
 		resetUserInfo();
@@ -278,7 +316,6 @@ $(document).ready(function(){
 	//Click handler for "Play Again" button
 	$("body").on("click", "#resetGame", function(event){
 		event.preventDefault();
-		console.log("click");
 		resetGameInfo();
 		$("#results").empty();
 		$("#btnDiv").empty();
@@ -297,47 +334,14 @@ $(document).ready(function(){
 	$("#chatBtn").click(function(event){
 		event.preventDefault();
 		var chatLine = $("#chatInput").val();
-		if(user == "user1"){
-			database.ref("Game").update({
-				user1Chat: chatLine
-			});
-			if(fromDatabaseArray[1].userName != "EnterName"){
-				$("#chat-title").text("Chatting with " + fromDatabaseArray[1].userName);
-			}
-			else{
-				$("#chat-title").text("Waiting for another user to join");
-			}
-		}
-		else if(user == "user2"){
-			database.ref("Game").update({
-				user2Chat: chatLine
-			});
-			if(fromDatabaseArray[0].userName != "EnterName"){
-				$("#chat-title").text("Chatting with " + fromDatabaseArray[0].userName);
-			}
-			else{
-				$("#chat-title").text("Waiting for another user to join the game");
-			}
-		}
+		sendChatToDb(chatLine);
 		$("#chatInput").val("");
 	});
 
 	//Value Handler for Chat - User 1
 	database.ref("Game/user1Chat").on("value", function(snapshot){
 		var newChatLine = snapshot.val();
-		var newDiv = $("<div>");
-		newDiv.text(newChatLine);
-		if(newChatLine == "NotInitiated"){
-			return;
-		}
-		if(user == "user1"){
-			newDiv.addClass("chatRight");
-		}
-		else{
-			newDiv.addClass("chatLeft");
-		}
-		$("#chat-window").prepend(newDiv);
-		$("#chat-window")[0].scrollIntoView(false);		
+		displayChatLine(newChatLine);
 	}, function(errorObject){
 			console.log(errorObject);
 	});
@@ -345,19 +349,7 @@ $(document).ready(function(){
 	//Value Handler for Chat - User 2
 	database.ref("Game/user2Chat").on("value", function(snapshot){
 		var newChatLine = snapshot.val();
-		var newDiv = $("<div>");
-		newDiv.text(newChatLine);
-		if(newChatLine == "NotInitiated"){
-			return;
-		}
-		if(user == "user2"){
-			newDiv.addClass("chatRight chatItm");
-		}
-		else{
-			newDiv.addClass("chatLeft chatItm");
-		}
-		$("#chat-window").prepend(newDiv);
-		$("#chat-window")[0].scrollIntoView(false);
+		displayChatLine(newChatLine);
 	}, function(errorObject){
 			console.log(errorObject);
 	});
