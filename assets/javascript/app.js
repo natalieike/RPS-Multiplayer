@@ -88,6 +88,9 @@ $(document).ready(function(){
 				imgTag.attr("src", "assets/images/scissors-emoji.png");
 				imgTag.addClass("resultsImg");
 				break;
+			default:
+				$("#weapon-choices").show();
+				return;
 		};
 		$("#results").append(imgTag);
 		winner = determineWinner();
@@ -175,7 +178,6 @@ $(document).ready(function(){
 		$("#btnDiv").append(resetBtn);
 		$("#btnDiv").append(leaveBtn);
 		resetFlag = false;
-		console.log(resetFlag);
 		database.ref("Game").update({
 			resetFlag: false
 		});
