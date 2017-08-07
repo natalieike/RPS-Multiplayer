@@ -219,20 +219,24 @@ $(document).ready(function(){
 	};
 
 	//Displays chat line
-	var displayChatLine = function(newChatLine){
+	var displayChatLine = function(newChatLine, whichUser){
 		var index;
 		var newDiv = $("<div>");
 		if(newChatLine == "NotInitiated"){
 			return;
 		}
 		newDiv.text(newChatLine);
+		if(user == whichUser){
+			newDiv.addClass("chatRight");
+		}
+		else{
+			newDiv.addClass("chatLeft");
+		}
 		if (user == "user1"){
 			index = 1;
-			newDiv.addClass("chatRight");
 		}
 		else if(user == "user2"){
 			index = 0;
-			newDiv.addClass("chatLeft");
 		}
 		if(fromDatabaseArray[index].userName != "EnterName"){
 			$("#chat-title").text("Chatting with " + fromDatabaseArray[index].userName);
@@ -358,7 +362,7 @@ $(document).ready(function(){
 	//Value Handler for Chat - User 1
 	database.ref("Game/user1Chat").on("value", function(snapshot){
 		var newChatLine = snapshot.val();
-		displayChatLine(newChatLine);
+		displayChatLine(newChatLine, "user1");
 	}, function(errorObject){
 			console.log(errorObject);
 	});
@@ -366,7 +370,7 @@ $(document).ready(function(){
 	//Value Handler for Chat - User 2
 	database.ref("Game/user2Chat").on("value", function(snapshot){
 		var newChatLine = snapshot.val();
-		displayChatLine(newChatLine);
+		displayChatLine(newChatLine, "user2");
 	}, function(errorObject){
 			console.log(errorObject);
 	});
