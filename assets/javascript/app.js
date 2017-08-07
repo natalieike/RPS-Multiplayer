@@ -268,7 +268,7 @@ $(document).ready(function(){
 
 	//Value handler for user1 name
 	database.ref("Game/user1Name").on("value", function(snapshot){
-			if(user == "user1" && snapshot.val("EnterName")){
+			if(user == "user1" && snapshot.val() == "EnterName"){
 				database.ref("Game").update({
 					user1Name: name
 				});
@@ -282,7 +282,7 @@ $(document).ready(function(){
 
 	//Value handler for user2 name
 	database.ref("Game/user2Name").on("value", function(snapshot){
-		if(user == "user2" && snapshot.val("EnterName")){
+		if(user == "user2" && snapshot.val() == "EnterName"){
 			database.ref("Game").update({
 				user2Name: name
 			});
