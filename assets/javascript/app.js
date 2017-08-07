@@ -207,8 +207,7 @@ $(document).ready(function(){
 			database.ref("Game").update({
 				user1Input: "3",
 				user2Input: "3",
-				resetFlag: true			
-		}
+				resetFlag: true	
 		})
 	};
 
