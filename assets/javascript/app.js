@@ -26,6 +26,7 @@ $(document).ready(function(){
 	var fromDatabaseArray = [{}, {}]; //stores database info for use in the app
 	var username; //stores username
 	var user = "user3"; //stores whether user 1 or user 2
+	var resetFlag = "true";
 
 	//Sends the user data to Firebase, determines if user1 or user2
 	var sendUserToDb = function(name){
@@ -173,6 +174,10 @@ $(document).ready(function(){
 		leaveBtn.text("Leave Game");
 		$("#btnDiv").append(resetBtn);
 		$("#btnDiv").append(leaveBtn);
+		resetFlag = false;
+		database.ref("game").update({
+			resetFlag: resetFlag;
+		});
 	}
 
 	//Resets all user info when user leaves so new player can join
@@ -198,9 +203,12 @@ $(document).ready(function(){
 
 	//Resets just the game inputs so the same user can play again.  Retains chat and username.
 	var resetGameInfo = function(){
-		database.ref("Game").update({
-			user1Input: "3",
-			user2Input: "3"
+		if(resetFlag == false){
+			database.ref("Game").update({
+				user1Input: "3",
+				user2Input: "3",
+				resetFlag: true			
+		}
 		})
 	};
 
@@ -373,6 +381,11 @@ $(document).ready(function(){
 		displayChatLine(newChatLine, "user2");
 	}, function(errorObject){
 			console.log(errorObject);
+	});
+
+	//Value handler for Reset Flag
+	database.ref("Game/resetFlag").on("value", function(snapshot){
+		resetFlag = snapshot.val();
 	});
 
 });
