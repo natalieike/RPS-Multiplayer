@@ -176,7 +176,7 @@ $(document).ready(function(){
 		$("#btnDiv").append(leaveBtn);
 		resetFlag = false;
 		database.ref("game").update({
-			resetFlag: resetFlag;
+			resetFlag: resetFlag
 		});
 	}
 
