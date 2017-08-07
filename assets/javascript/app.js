@@ -270,7 +270,7 @@ $(document).ready(function(){
 	database.ref("Game/user1Name").on("value", function(snapshot){
 			if(user == "user1" && snapshot.val() == "EnterName"){
 				database.ref("Game").update({
-					user1Name: name
+					user1Name: username
 				});
 			}
 			else{
@@ -284,7 +284,7 @@ $(document).ready(function(){
 	database.ref("Game/user2Name").on("value", function(snapshot){
 		if(user == "user2" && snapshot.val() == "EnterName"){
 			database.ref("Game").update({
-				user2Name: name
+				user2Name: username
 			});
 		}
 		else{
