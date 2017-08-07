@@ -193,6 +193,7 @@ $(document).ready(function(){
 				user2Chat: "NotInitiated"
 			});			
 		}
+		user = "user3";
 	};
 
 	//Resets just the game inputs so the same user can play again.  Retains chat and username.
@@ -246,6 +247,16 @@ $(document).ready(function(){
 	//Hides Weapon Choice and Stats until Username is entered
 	$(".panel").hide();
 
+	//Resets user info if user closes window without leaving game properly.  Not ideal - resets whole game
+	database.ref("Game").onDisconnect().update({
+		user1Name: "EnterName",
+		user1Input: "3",
+		user1Chat: "NotInitiated",
+		user2Name: "EnterName",
+		user2Input: "3",
+		user2Chat: "NotInitiated"
+	});
+
 	//Button Handler for entering username
 	$("#submit").click(function(event){
 		event.preventDefault();
@@ -257,14 +268,28 @@ $(document).ready(function(){
 
 	//Value handler for user1 name
 	database.ref("Game/user1Name").on("value", function(snapshot){
-			fromDatabaseArray[0].userName = snapshot.val();
+			if(user != "user3" && snapshot.val("EnterName")){
+				database.ref("Game").update({
+					user1Name: name
+				});
+			}
+			else{
+				fromDatabaseArray[0].userName = snapshot.val();
+			}
 		}, function(errorObject){
 			console.log(errorObject);
 	});
 
 	//Value handler for user2 name
 	database.ref("Game/user2Name").on("value", function(snapshot){
+		if(user != "user3" && snapshot.val("EnterName")){
+			database.ref("Game").update({
+				user1Name: name
+			});
+		}
+		else{
 			fromDatabaseArray[1].userName = snapshot.val();
+		}
 		}, function(errorObject){
 			console.log(errorObject);
 	});
@@ -320,14 +345,6 @@ $(document).ready(function(){
 		$("#results").empty();
 		$("#btnDiv").empty();
 		$("#weapon-choices").show();
-	});
-
-	//Resets user info if user closes window without leaving game properly
-	database.ref("Game").onDisconnect().update({
-		user1Name: "EnterName",
-		user1Input: "3",
-		user2Input: "3",
-		user1Chat: "NotInitiated"
 	});
 
 	//Click handler for chat button
