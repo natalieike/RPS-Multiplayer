@@ -90,6 +90,7 @@ $(document).ready(function(){
 				break;
 			default:
 				$("#weapon-choices").show();
+				$("#btnDiv").empty();
 				return;
 		};
 		$("#results").append(imgTag);
@@ -168,7 +169,7 @@ $(document).ready(function(){
 	var endGame = function(){
 		var resetBtn = $("<button>");
 		var leaveBtn = $("<button>");
-		$("#btnDiv").clear();
+		$("#btnDiv").empty();
 		resetBtn.addClass("btn btn-info gameBtn");
 		resetBtn.attr("id", "resetGame");
 		resetBtn.text("Play Again");
