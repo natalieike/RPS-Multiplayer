@@ -26,7 +26,7 @@ $(document).ready(function(){
 	var fromDatabaseArray = [{}, {}]; //stores database info for use in the app
 	var username; //stores username
 	var user = "user3"; //stores whether user 1 or user 2
-	var resetFlag = "true";
+	var resetFlag = true;
 
 	//Sends the user data to Firebase, determines if user1 or user2
 	var sendUserToDb = function(name){
@@ -178,7 +178,7 @@ $(document).ready(function(){
 		database.ref("game").update({
 			resetFlag: resetFlag
 		});
-	}
+	};
 
 	//Resets all user info when user leaves so new player can join
 	var resetUserInfo = function(){
@@ -187,7 +187,8 @@ $(document).ready(function(){
 				user1Name: "EnterName",
 				user1Input: "3",
 				user2Input: "3",
-				user1Chat: "NotInitiated"
+				user1Chat: "NotInitiated",
+				resetFlag: true
 			});
 		}
 		else if(user == "user2"){
@@ -195,7 +196,8 @@ $(document).ready(function(){
 				user2Name: "EnterName",
 				user1Input: "3",
 				user2Input: "3",
-				user2Chat: "NotInitiated"
+				user2Chat: "NotInitiated",
+				resetFlag: true
 			});			
 		}
 		user = "user3";
@@ -208,7 +210,8 @@ $(document).ready(function(){
 				user1Input: "3",
 				user2Input: "3",
 				resetFlag: true	
-		});
+			});
+		};
 	};
 
 	//Saves chat line to the database
@@ -265,7 +268,8 @@ $(document).ready(function(){
 		user1Chat: "NotInitiated",
 		user2Name: "EnterName",
 		user2Input: "3",
-		user2Chat: "NotInitiated"
+		user2Chat: "NotInitiated",
+		resetFlag: true
 	});
 
 	//Button Handler for entering username
