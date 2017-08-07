@@ -208,7 +208,7 @@ $(document).ready(function(){
 				user1Input: "3",
 				user2Input: "3",
 				resetFlag: true	
-		})
+		});
 	};
 
 	//Saves chat line to the database
